@@ -30,6 +30,24 @@ module.exports.getAllOrders = asyncHandler(async (req, res) => {
     }
   });
   
+module.exports.removeOrder = asyncHandler(async (req, res) => {
+    try {
+        const token = await req.headers.authorization.split(' ')[1];
+          if (!token){res.status(404).json({message:'No token provided'})}
+          const decoded = await jwt.verify(token,process.env.SECRET_JWT)
+
+      const orders = await Order.findById(req.params.id);
+      if(!orders){res.status(404).json({message:'not found'})}
+      if(orders.user==decoded.id){
+         const remove = await Order.findByIdAndUpdate(req.params.id)
+      res.status(200).json({message:'success'});
+      }
+     
+    } catch (err) {
+      res.status(500).json({ message: 'Error fetching orders', error: err.message });
+    }
+  });
+  
   // تعديل حالة الأوردر
   module.exports.updateOrderStatus = asyncHandler(async (req, res) => {
     try {

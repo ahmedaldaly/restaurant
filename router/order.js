@@ -1,6 +1,6 @@
 // في ملف `orderRouter.js`
 const express = require('express');
-const { createOrder, getAllOrders, updateOrderStatus, getUserOrders } = require('../controller/orderController');
+const { createOrder, getAllOrders, updateOrderStatus, getUserOrders,removeOrder } = require('../controller/orderController');
 const router = express.Router();
 
 // راوت لإنشاء الأوردر
@@ -10,7 +10,7 @@ router.post('/', createOrder);
 router.get('/', getAllOrders);
 
 // راوت لتعديل حالة الأوردر
-router.put('/:id', updateOrderStatus);
+router.route('/:id').put( updateOrderStatus).delete(removeOrder);
 
 // راوت لعرض أوردرات المستخدم
 router.get('/user-orders', getUserOrders);
