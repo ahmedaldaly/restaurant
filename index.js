@@ -32,7 +32,9 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 ConnectDB();
-
+app.get('/',(req,res)=>{
+  res.status(200).json({message:'hello'})
+})
 // الراوترات
 app.use('/api/v1/auth', require('./router/auth'));
 app.use('/api/v1/category', require('./router/category'));
