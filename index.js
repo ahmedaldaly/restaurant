@@ -3,10 +3,20 @@ const http = require('http'); // مهم لإنشاء السيرفر
 const { Server } = require('socket.io');
 const dotenv = require('dotenv').config();
 const ConnectDB = require('./config/ConnectDB');
-
+const rateLimit = require('express-rate-limit');
 const app = express();
 const server = http.createServer(app); // استخدام http بدلاً من app.listen مباشرة
+// تحديد الحد: مثلاً 100 طلب في الدقيقة
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 دقيقة
+  max: 100, // عدد الطلبات المسموح بها
+  message: 'لقد تجاوزت الحد المسموح للطلبات، حاول لاحقًا.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
+// تطبيقه على كل الروترات:
+app.use(limiter);
 const io = new Server(server, {
   cors: {
     origin: '*', // لو الفرونت على دومين مختلف غير الباك
