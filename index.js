@@ -28,6 +28,7 @@ app.use('/api/v1/auth', require('./router/auth'));
 app.use('/api/v1/category', require('./router/category'));
 app.use('/api/v1/product', require('./router/product'));
 app.use('/api/v1/orders', require('./router/order')); // لا تنسَ تعمل راوتر الأوردر
+app.use('/api/v1/image', require('./router/image')); 
 
 // الاتصال بالسوكت
 io.on('connection', (socket) => {
