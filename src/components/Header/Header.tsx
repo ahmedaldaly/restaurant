@@ -22,7 +22,7 @@ type FormData = {
   email: string
   password: string
 }
-
+const token = cookie.get('userToken')
 const Header = () => {
   const {
     register,
@@ -52,6 +52,7 @@ const Header = () => {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [scroll, setScroll] = useState(false);
   const [menu, setMenu] = useState(false);
+  const [logUser, setLogUser] = useState(false);
   const [orderMenu, setOrderMenu] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
   const [openLang, setOpenLang] = useState(false);
@@ -195,14 +196,19 @@ const Header = () => {
               </div>
             )}
           </div>
-
+{/* here */}
           {/* User */}
-          <button
+         {token? <button
+            onClick={() => setLogUser(!logUser)}
+            className="text-xl  h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center"
+          >
+            <FaUserCircle />
+          </button>: <button
             onClick={() => setUserMenu(!userMenu)}
             className="text-xl  h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center"
           >
             <FaUserCircle />
-          </button>
+          </button>}
 
           {/* Cart */}
           <button
@@ -282,7 +288,7 @@ const Header = () => {
       </AnimatePresence>
       {/*  */}
     <AnimatePresence>
-  {userMenu && (
+  {userMenu && !token&&(
     <motion.div
       key="user-menu"
       initial={{ x: Arabic ? "-100%" : "100%" }}
@@ -347,7 +353,10 @@ const Header = () => {
     </motion.div>
   )}
 </AnimatePresence>
-
+{/*  */}
+<AnimatePresence>
+  {logUser &&<motion.div className={`w-56 min-h-52 dark:text-white  bg-white/50 backdrop-blur-2xl dark:bg-black/40 dark:border-gray-700 dark:shadow-gray-800 border-1 border-gray-200 shadow-md fixed z-20 top-20 ${Arabic?"left-44":"right-44"}`}></motion.div>}
+</AnimatePresence>
 </>
   );
 };
