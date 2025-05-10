@@ -9,7 +9,7 @@ import { IoLanguageSharp } from "react-icons/io5";
 import Link from 'next/link';
 import { RiMenu3Fill } from "react-icons/ri";
 import { RiMenu2Fill } from "react-icons/ri";
-import { motion } from "motion/react"
+import { motion,AnimatePresence} from "motion/react"
 const Header = () => {
   const locale = useLocale();
   const pathname = usePathname();
@@ -19,6 +19,7 @@ const Header = () => {
 
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [scroll, setScroll] = useState(false);
+  const [menu, setMenu] = useState(false);
   const [openLang, setOpenLang] = useState(false);
 
   useEffect(() => {
@@ -52,15 +53,18 @@ console.log(pathname)
   }, []);
 
   return (
+    <AnimatePresence>
+
     <motion.header
-   initial={{opacity:0,y:-100}}
-   animate={{opacity:1,y:0}}
+   initial={{height:'72px',opacity:0}}
+   animate={{height:menu?'256px':'72px',opacity:1}}
+   exit={{height:'72px'}}
     transition={{duration:0.5}}
-    className={`w-full h-18 flex justify-evenly items-center bg-white/70 backdrop:backdrop-blur-2xl dark:text-white dark:bg-[#020817] ${scroll && 'fixed top-0 shadow-md dark:bg-black/35 dark:shadow-gray-900'} z-50`}>
+    className={` ${menu?'h-64 flex-wrap w-full flex justify-between backdrop:backdrop-blur-2xl items-start pt-5 px-5':'w-full h-18 flex justify-evenly items-center bg-white/70 backdrop:backdrop-blur-2xl dark:text-white dark:bg-[#020817]'}  ${scroll && 'fixed top-0 shadow-md dark:bg-black/35 dark:shadow-gray-900'} z-50 max-md:justify-between max-md:px-5 `}>
       {/* Logo */}
       <div className='flex justify-center items-center'>
         <img src="/logo.png" alt="Logo" className='w-24' />
-        <h1 className='font-bold'>{Arabic ? "بيت مريم" : "Beit Meryam"}</h1>
+        <h1 className='font-bold max-md:hidden'>{Arabic ? "بيت مريم" : "Beit Meryam"}</h1>
       </div>
 
       {/* Navigation */}
@@ -124,7 +128,7 @@ console.log(pathname)
           </button>
 
           {openLang && (
-            <div className="absolute right-0 mt-4 pt-2 w-32 bg-white dark:bg-gray-800 rounded-md h-22 shadow-lg z-50 text-sm">
+            <div className="absolute  right-0 mt-4 pt-2 w-32 bg-white dark:bg-gray-800 rounded-md h-22 shadow-lg z-50 text-sm">
               <button
                 onClick={() => handleSwitchTo('en')}
                 className="w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -142,19 +146,28 @@ console.log(pathname)
         </div>
 
         {/* User */}
-        <button className="text-xl max-md:hidden h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center">
+        <button className="text-xl  h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center">
           <FaUserCircle />
         </button>
 
         {/* Cart */}
-        <button className="text-xl h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center">
+        <button className="text-xl  h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center">
           <MdOutlineShoppingCart />
         </button>
-        <button className="text-xl hidden max-md:flex h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800  justify-center items-center">
+        <button
+        onClick={()=>setMenu(!menu)}
+        className="text-xl hidden max-md:flex h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800  justify-center items-center">
          {Arabic?<RiMenu2Fill/>:<RiMenu3Fill/>}
         </button>
       </div>
+      {menu&&<div className='w-full flex flex-wrap'>
+        <Link className='w-full h-8 border-b-1 border-gray-100 dark:border-gray-800 text-lg ' href='/'>{Arabic?'الرئسية':"Home"}</Link>
+        <Link className='w-full h-8 border-b-1 border-gray-100 dark:border-gray-800 text-lg ' href='/about'>{Arabic?'حول':"About Us"}</Link>
+        <Link className='w-full h-8 border-b-1 border-gray-100 dark:border-gray-800 text-lg ' href='/menu'>{Arabic?'القائمة':"Menu"}</Link>
+        <Link className='w-full h-8 border-b-1 border-gray-100 dark:border-gray-800 text-lg ' href='/content'>{Arabic?'اتصال':"Content Us"}</Link>
+        </div>}
     </motion.header>
+   </AnimatePresence>
   );
 };
 
