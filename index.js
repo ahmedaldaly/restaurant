@@ -4,6 +4,7 @@ const { Server } = require('socket.io');
 const dotenv = require('dotenv').config();
 const ConnectDB = require('./config/ConnectDB');
 const rateLimit = require('express-rate-limit');
+const cors = require('cors')
 const app = express();
 const server = http.createServer(app); // استخدام http بدلاً من app.listen مباشرة
 // تحديد الحد: مثلاً 100 طلب في الدقيقة
@@ -23,7 +24,7 @@ const io = new Server(server, {
     methods: ['GET', 'POST']
   }
 });
-
+app.use(cors());
 // تخزين الـ socket.io في كل request
 app.use((req, res, next) => {
   req.io = io;
