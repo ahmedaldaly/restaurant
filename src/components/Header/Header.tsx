@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import React, { useEffect, useState } from "react";
 import cookie from 'js-cookie'
+  import { IoIosArrowDropdown } from "react-icons/io";
 import {
   MdOutlineDarkMode,
   MdOutlineLightMode,
@@ -21,6 +22,12 @@ import { BaseUrl } from "../BaseUrl";
 type FormData = {
   email: string
   password: string
+}
+interface user {
+  _id:string,
+  email:string,
+  name:string,
+  isAdmin:boolean
 }
 const token = cookie.get('userToken')
 const Header = () => {
@@ -52,12 +59,22 @@ const Header = () => {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [scroll, setScroll] = useState(false);
   const [menu, setMenu] = useState(false);
+  const [adminMenu, setAdminMenu] = useState(false);
   const [logUser, setLogUser] = useState(false);
   const [orderMenu, setOrderMenu] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
   const [openLang, setOpenLang] = useState(false);
+const [user, setUser] = useState<user>()
 
   useEffect(() => {
+    axios.get(`${BaseUrl}/api/v1/user`,{
+      headers:{
+        authorization: `Bearer ${token}`
+      }
+    }).then((data)=>{
+      console.log(data.data)
+      setUser(data.data)
+    })
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
     const preferred = savedTheme || "light";
     setTheme(preferred);
@@ -86,6 +103,11 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+const handleLogout = () => {
+  cookie.remove('userToken');
+  setLogUser(false);
+ window.location.href ='/'
+};
 
   return (
     <>
@@ -355,8 +377,48 @@ const Header = () => {
 </AnimatePresence>
 {/*  */}
 <AnimatePresence>
-  {logUser &&<motion.div className={`w-56 min-h-52 dark:text-white  bg-white/50 backdrop-blur-2xl dark:bg-black/40 dark:border-gray-700 dark:shadow-gray-800 border-1 border-gray-200 shadow-md fixed z-20 top-20 ${Arabic?"left-44":"right-44"}`}></motion.div>}
+  {logUser && (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.3 }}
+      className={`w-64 min-h-52 px-4 py-5 rounded-2xl 
+        fixed z-20 top-20 
+        ${Arabic ? "left-10" : "right-10"} 
+        border border-gray-200 shadow-md 
+        dark:border-gray-700 dark:shadow-gray-800 
+        bg-white/50 backdrop-blur-2xl dark:bg-black/40 
+        text-gray-800 dark:text-white`}
+    >
+      <h1 className="text-xl font-semibold mb-4">
+        {Arabic ? "مرحبا 👋" : "Welcome 👋"} {user?.name}
+      </h1>
+      <button
+      onClick={()=>handleLogout()}
+        className="w-full py-2 rounded-lg mt-2 bg-red-500 hover:bg-red-600 text-white transition"
+      >
+        {Arabic ? "تسجيل خروج" : "Log Out"}
+      </button>
+      {user?.isAdmin&&<div className="w-full h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center">
+        <p >Admin</p>
+        <span onClick={()=>setAdminMenu(!adminMenu)}><IoIosArrowDropdown/></span>
+  
+        </div>}
+        {adminMenu &&<motion.div className="w-full gap-2 px-2 rounded-md flex flex-wrap justify-center ">
+          <Link className="w-[48%] h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center text-sm" href='/'>Category</Link>
+          <Link className="w-[48%] h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center text-sm" href='/'>Add Category</Link>
+          <Link className="w-[48%] h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center text-sm" href='/'>Products</Link>
+          <Link className="w-[48%] h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center text-sm" href='/'>Add Products</Link>
+          <Link className="w-[48%] h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center text-sm" href='/'>Orders</Link>
+          <Link className="w-[48%] h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center text-sm" href='/'>Booking</Link>
+          <Link className="w-[48%] h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center text-sm" href='/'>Images</Link>
+         
+          </motion.div>}
+    </motion.div>
+  )}
 </AnimatePresence>
+
 </>
   );
 };
