@@ -35,6 +35,7 @@ const ViewCategories = () => {
   }
   return (
     <div className='w-full min-h-[80vh] hide-scrollbar gap-5 overflow-scroll my-5 flex flex-wrap'>
+      
       {category.map((item)=>(
         <div key={item._id}>
           <img className='w-42' src={item.image.url} alt={item.name} />

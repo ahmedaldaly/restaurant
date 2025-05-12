@@ -30,7 +30,7 @@ const [loading, setLoading] = useState(false)
 
     axios.post(`${BaseUrl}/api/v1/category`, formData, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data',
       },
     })

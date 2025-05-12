@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vladmandic/human": "^3.3.5",
     "axios": "^1.9.0",
     "js-cookie": "^3.0.5",
     "motion": "^12.10.5",
