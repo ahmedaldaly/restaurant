@@ -59,7 +59,7 @@ const Header = () => {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [scroll, setScroll] = useState(false);
   const [menu, setMenu] = useState(false);
-  const [adminMenu, setAdminMenu] = useState(false);
+
   const [logUser, setLogUser] = useState(false);
   const [orderMenu, setOrderMenu] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
@@ -187,7 +187,7 @@ const handleLogout = () => {
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
-            className="text-xl h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center"
+            className="text-xl h-9 w-9  max-sm:w-7 max-sm:h-7 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center"
           >
             {theme === "dark" ? <MdOutlineLightMode /> : <MdOutlineDarkMode />}
           </button>
@@ -195,7 +195,7 @@ const handleLogout = () => {
           {/* Language Dropdown */}
           <div className="relative">
             <button
-              className="text-xl  max-sm:hidden h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center"
+              className="text-xl  max-sm:w-7 max-sm:h-7 h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center"
               onClick={() => setOpenLang(!openLang)}
             >
               <IoLanguageSharp />
@@ -222,12 +222,12 @@ const handleLogout = () => {
           {/* User */}
          {token? <button
             onClick={() => setLogUser(!logUser)}
-            className="text-xl  h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center"
+            className="text-xl  max-sm:w-7 max-sm:h-7  h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center"
           >
             <FaUserCircle />
           </button>: <button
             onClick={() => setUserMenu(!userMenu)}
-            className="text-xl  h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center"
+            className="text-xl  max-sm:w-7 max-sm:h-7  h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center"
           >
             <FaUserCircle />
           </button>}
@@ -235,13 +235,13 @@ const handleLogout = () => {
           {/* Cart */}
           <button
             onClick={() => setOrderMenu(!orderMenu)}
-            className="text-xl  h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center"
+            className="text-xl  max-sm:w-7 max-sm:h-7  h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center"
           >
             <MdOutlineShoppingCart />
           </button>
           <button
             onClick={() => setMenu(!menu)}
-            className="text-xl hidden max-md:flex h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800  justify-center items-center"
+            className="text-xl hidden  max-sm:w-7 max-sm:h-7 max-md:flex h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800  justify-center items-center"
           >
             {Arabic ? <RiMenu2Fill /> : <RiMenu3Fill />}
           </button>
@@ -400,21 +400,12 @@ const handleLogout = () => {
       >
         {Arabic ? "تسجيل خروج" : "Log Out"}
       </button>
-      {user?.isAdmin&&<div className="w-full h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center">
+      {user?.isAdmin&&<Link href='/admin' className="w-full h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center">
         <p >Admin</p>
-        <span onClick={()=>setAdminMenu(!adminMenu)}><IoIosArrowDropdown/></span>
+        <span><IoIosArrowDropdown/></span>
   
-        </div>}
-        {adminMenu &&<motion.div className="w-full gap-2 px-2 rounded-md flex flex-wrap justify-center ">
-          <Link className="w-[48%] h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center text-sm" href='/'>Category</Link>
-          <Link className="w-[48%] h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center text-sm" href='/'>Add Category</Link>
-          <Link className="w-[48%] h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center text-sm" href='/'>Products</Link>
-          <Link className="w-[48%] h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center text-sm" href='/'>Add Products</Link>
-          <Link className="w-[48%] h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center text-sm" href='/'>Orders</Link>
-          <Link className="w-[48%] h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center text-sm" href='/'>Booking</Link>
-          <Link className="w-[48%] h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center text-sm" href='/'>Images</Link>
-         
-          </motion.div>}
+        </Link>}
+
     </motion.div>
   )}
 </AnimatePresence>
