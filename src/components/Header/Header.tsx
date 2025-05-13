@@ -400,7 +400,7 @@ const handleLogout = () => {
       >
         {Arabic ? "تسجيل خروج" : "Log Out"}
       </button>
-      {user?.isAdmin&&<Link href='/admin' className="w-full h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center">
+      {user?.isAdmin&&<Link onClick={()=>setLogUser(!logUser)} href='/admin' className="w-full h-10 bg-gray-200 rounded-md my-2 px-2 flex justify-between dark:bg-gray-700 items-center">
         <p >Admin</p>
         <span><IoIosArrowDropdown/></span>
   

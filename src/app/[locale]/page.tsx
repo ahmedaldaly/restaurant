@@ -1,8 +1,11 @@
+import Hero from '@/components/Home/Hero'
 import React from 'react'
 
 const page = () => {
   return (
-    <div className=' w-full h-[120vh]  dark:bg-[#020817]'>page</div>
+    <div className=' w-full h-[120vh]  overflow-hidden dark:bg-black/90'>
+      <Hero/>
+    </div>
   )
 }
 
