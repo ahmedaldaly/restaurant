@@ -45,7 +45,7 @@ export default async function LocaleLayout({
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
       className={`${cairo.className} ${isDark ? 'dark' : ''}`}
     >
-      <body className="dark:bg-[#020817] dark:text-white">
+      <body className=" dark:text-white">
         <NextIntlClientProvider>
           <Header/>
           {children}

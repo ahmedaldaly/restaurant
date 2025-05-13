@@ -3,7 +3,7 @@ import React from 'react'
 
 const page = () => {
   return (
-    <div className=' w-full h-[120vh]  overflow-hidden dark:bg-black/90'>
+    <div className=' w-full h-[120vh]  overflow-hidden dark:bg-black/80'>
       <Hero/>
     </div>
   )
