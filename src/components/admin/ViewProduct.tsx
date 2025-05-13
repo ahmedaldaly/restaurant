@@ -24,7 +24,7 @@ interface product {
 const ViewProduct = () => {
   const token = Cookies.get("userToken");
   const [product, setProduct] = useState<product[]>([]);
-  const [imageIndex, setImageIndex] = useState(0);
+const [imageIndexes, setImageIndexes] = useState<{ [key: string]: number }>({});
   const [editId, setEditId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDesc, setEditDesc] = useState("");
@@ -95,17 +95,24 @@ const ViewProduct = () => {
             key={item._id}
             className="bg-white w-56 dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
           >
-            <img
-              onMouseEnter={() =>
-                setImageIndex((prevIndex) =>
-                  prevIndex + 1 >= item.images.length ? 0 : prevIndex + 1
-                )
-              }
-              onMouseLeave={() => setImageIndex(0)}
-              src={item.images[imageIndex]?.url}
-              alt={item.title}
-              className="w-full h-48 object-cover object-center"
-            />
+          <img
+  onMouseEnter={() =>
+    setImageIndexes((prev) => ({
+      ...prev,
+      [item._id]: ((prev[item._id] || 0) + 1) % item.images.length,
+    }))
+  }
+  onMouseLeave={() =>
+    setImageIndexes((prev) => ({
+      ...prev,
+      [item._id]: 0,
+    }))
+  }
+  src={item.images[imageIndexes[item._id] || 0]?.url}
+  alt={item.title}
+  className="w-full h-48 object-cover object-center"
+/>
+
             <div className="p-4 flex flex-col gap-2">
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Category: {item.category}
