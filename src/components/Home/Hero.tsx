@@ -15,7 +15,7 @@ const Hero = () => {
           🍽️ {Arabic?'افضل الاطعمة الصحية':'Best Healty Food'}
         </div>
 
-        <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+        <h1 className="text-4xl md:text-7xl font-bold leading-tight">
           {Arabic?'استمتع ':'Enjoy'} <span className="text-pink-500">{Arabic?'بالطعام':'Delicious'}</span><br className="max-lg:hidden" />
          {Arabic?'  اللذيذ في' :' Food in Your'} <br className="max-lg:hidden" />
           {Arabic?' حياتك الصحية':'Healty life'}
@@ -27,10 +27,10 @@ const Hero = () => {
 
         {/* Buttons */}
         <div className="flex gap-4">
-          <button className="bg-[#E93553] hover:bg-pink-600 text-white px-6 py-3 rounded-md shadow-md transition">
+          <button className="bg-gradient-to-r from-pink-500 to-rose-400 text-white font-semibold px-6 py-3 rounded-lg shadow-[0_4px_20px_rgba(249,115,129,0.4)] hover:brightness-105 transition">
             {Arabic?'البدء':'Get Started'}
           </button>
-          <button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-md shadow-md transition">
+          <button className="bg-gradient-to-r from-black to-gray-600 text-white font-semibold px-6 py-3 rounded-lg shadow-[0_4px_20px_rgba(249,115,129,0.4)] hover:brightness-105 transition">
           {Arabic?'اطلب الان':'Order Now'}
           </button>
         </div>

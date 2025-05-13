@@ -18,12 +18,12 @@ const AdminPage = () => {
   const sliderRef = useRef<React.ElementRef<typeof Slider>>(null);
 
   const tabs = [
-    { component: <AddCategory /> },
-    { component: <ViewCategories /> },
-    { component: <AddProduct /> },
-    { component: <ViewProducts /> },
-    { component: <AddImage /> },
-    { component: <Orders /> },
+    { name: Arabic ? 'إضافة تصنيف' : 'Add Category', component: <AddCategory /> },
+    { name: Arabic ? 'عرض التصنيفات' : 'View Categories', component: <ViewCategories /> },
+    { name: Arabic ? 'إضافة منتج' : 'Add Product', component: <AddProduct /> },
+    { name: Arabic ? 'عرض المنتجات' : 'View Products', component: <ViewProducts /> },
+    { name: Arabic ? 'إضافة صورة' : 'Add Image', component: <AddImage /> },
+    { name: Arabic ? 'الطلبات' : 'Orders', component: <Orders /> },
   ];
 
   const settings = {
@@ -35,30 +35,30 @@ const AdminPage = () => {
     arrows: false,
   };
 
-  const nextSlide = () => {
-    sliderRef.current?.slickNext();
+  const goToSlide = (index: number) => {
+    sliderRef.current?.slickGoTo(index);
   };
 
-  const prevSlide = () => {
-    sliderRef.current?.slickPrev();
-  };
+  const buttons = Arabic ? [...tabs].reverse() : tabs;
 
   return (
     <div className="w-[70%] mx-auto mt-10">
-      {/* أزرار السابق والتالي */}
-      <div className="flex justify-center gap-6 mb-6">
-        <button
-          onClick={prevSlide}
-          className="bg-blue-600 text-white px-6 py-2 rounded"
-        >
-          {Arabic ? 'السابق' : 'Previous'}
-        </button>
-        <button
-          onClick={nextSlide}
-          className="bg-blue-600 text-white px-6 py-2 rounded"
-        >
-          {Arabic ? 'التالي' : 'Next'}
-        </button>
+      {/* أزرار التنقل بين المكونات */}
+      <div className={`flex ${Arabic ? 'flex-row-reverse' : ''} justify-center gap-2 mb-6 flex-wrap`}>
+        {buttons.map((tab, index) => {
+          // نحدد الـ index الأصلي حسب اللغة
+          
+
+          return (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className="bg-blue-600 text-white px-4 py-2 rounded text-sm"
+            >
+              {tab.name}
+            </button>
+          );
+        })}
       </div>
 
       {/* السلايدر */}
