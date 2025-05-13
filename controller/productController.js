@@ -6,7 +6,7 @@ const streamifier = require('streamifier'); // تأكد من تثبيته: npm i
 
 module.exports.addProduct = asyncHandler(async (req, res) => {
   try {
-    const { title, description, category, sizes } = req.body;
+    const { title, description,descriptionAr, category, sizes } = req.body;
 
     // التأكد من وجود الكاتيجوري
     const checkCategory = await Category.findOne({ name: category });
@@ -46,6 +46,7 @@ module.exports.addProduct = asyncHandler(async (req, res) => {
     const newProduct = new Product({
       title, // استخدم العنوان المرسل من المستخدم
       description,
+      descriptionAr,
       category,
       sizes: parsedSizes,
       images: imageUploads,
@@ -107,7 +108,7 @@ module.exports.removeProduct = asyncHandler(async (req, res) => {
   
   module.exports.editProduct = asyncHandler(async (req,res)=>{
     try{
-      const { title, description, category, sizes } = req.body;
+      const { title, description,descriptionAr, category, sizes } = req.body;
       const check = await Product.findById(req.params.id)
       if(!check){
         res.status(404).json({message:'product not found'})
@@ -118,6 +119,7 @@ module.exports.removeProduct = asyncHandler(async (req, res) => {
         title:req.body.title,
         sizes:parsedSizes,
         description,
+        descriptionAr,
       },{new:true})
       res.status(200).json(edit)
     }catch(err){res.status(500).json(err)}

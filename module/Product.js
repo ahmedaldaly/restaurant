@@ -16,6 +16,13 @@ const ProductSchema = mongoose.Schema({
     minlength: 5,
     maxlength: 500,
   },
+  descriptionAr: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 5,
+    maxlength: 500,
+  },
   category: {
     type: String,
     required: true,
