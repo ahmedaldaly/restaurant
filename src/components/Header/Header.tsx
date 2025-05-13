@@ -120,8 +120,8 @@ const handleLogout = () => {
         transition={{ duration: 0.2 }}
         className={` ${
           menu
-            ? "h-64 flex-wrap w-full flex justify-between backdrop:backdrop-blur-2xl items-start pt-5 px-5"
-            : "w-full h-18 flex justify-evenly items-center bg-white/70 backdrop:backdrop-blur-2xl dark:text-white dark:bg-[#020817]"
+            ? "h-64 flex-wrap w-full flex justify-between backdrop-blur-xl items-start pt-5 px-5"
+            : "w-full h-18 flex justify-evenly items-center bg-white/70 backdrop-blur-xl dark:text-white dark:bg-[#020817]"
         }  ${
           scroll &&
           "fixed top-0 shadow-md dark:bg-black/35 dark:shadow-gray-900"
