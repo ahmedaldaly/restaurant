@@ -42,7 +42,9 @@ const AdminPage = () => {
   const buttons = Arabic ? [...tabs].reverse() : tabs;
 
   return (
-    <div className="w-[70%] mx-auto mt-10">
+    <div className='w-full min-h-screen dark:bg-black/90'>
+
+    <div className="w-[70%] mx-auto pt-10 max-md:w-[90%]">
       {/* أزرار التنقل بين المكونات */}
       <div className={`flex ${Arabic ? 'flex-row-reverse' : ''} justify-center gap-2 mb-6 flex-wrap`}>
         {buttons.map((tab, index) => {
@@ -70,6 +72,7 @@ const AdminPage = () => {
         ))}
       </Slider>
     </div>
+        </div>
   );
 };
 

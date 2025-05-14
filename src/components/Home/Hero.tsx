@@ -30,14 +30,14 @@ const Hero = () => {
           <button className="bg-gradient-to-r from-pink-500 cursor-pointer to-rose-400 text-white font-semibold px-6 py-3 rounded-lg shadow-[0_4px_20px_rgba(249,115,129,0.4)] hover:brightness-105 transition">
             {Arabic?'البدء':'Get Started'}
           </button>
-          <button className="bg-gradient-to-r from-black to-gray-600 cursor-pointer text-white font-semibold px-6 py-3 rounded-lg  hover:brightness-105 transition">
+          <button className="bg-gradient-to-r hover:bg-gradient-to-l duration-300 from-black to-gray-600 cursor-pointer text-white font-semibold px-6 py-3 rounded-lg  hover:brightness-105 transition">
           {Arabic?'اطلب الان':'Order Now'}
           </button>
         </div>
       </div>
 
       {/* Right Side - Image */}
-      <div className=" md:block relative w-[600px] max-md:w-[400px] max-md:h-[400px] h-[600px]">
+      <div className=" md:block  mt-10 relative w-[600px] max-md:w-[400px] max-md:h-[400px] h-[600px]">
         <Image
           src="/hero.png" 
           alt="food"

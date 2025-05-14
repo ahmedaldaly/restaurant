@@ -34,7 +34,7 @@ const ViewCategories = () => {
     }catch(err){console.log(err)}
   }
   return (
-    <div className='w-full min-h-[80vh] hide-scrollbar gap-5 overflow-scroll my-5 flex flex-wrap'>
+    <div className='w-full min-h-[80vh] hide-scrollbar gap-5 overflow-scroll my-5 flex justify-center flex-wrap'>
       
       {category.map((item)=>(
         <div key={item._id}>

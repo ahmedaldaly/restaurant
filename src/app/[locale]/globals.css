@@ -11,10 +11,11 @@
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
-body {
-  background-image: url('/bg.png');
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+
+
+.categor {
+  clip-path: polygon(0 0, 100% 25%, 100% 100%, 0% 100%);
+  transition: all 0.3s ease-in-out
+
+
 }
