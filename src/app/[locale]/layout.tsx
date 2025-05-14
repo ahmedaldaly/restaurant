@@ -6,6 +6,7 @@ import { routing } from '@/i18n/routing';
 import type { Metadata } from "next";
 import { Cairo } from 'next/font/google';
 import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
 
 export const metadata: Metadata = {
   title: "Beit Meryam",
@@ -49,6 +50,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider>
           <Header/>
           {children}
+          <Footer/>
           </NextIntlClientProvider>
       </body>
     </html>
