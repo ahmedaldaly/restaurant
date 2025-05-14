@@ -68,13 +68,13 @@ const Arabic = locale ==='ar'
       <div className='flex w-ful justify-center gap-5 items-center'>
         <hr className='w-20 text-pink-700'/>
         <img className='w-10' src="/spoon.svg" alt="" />
-        <hr className='w-20'/>
+        <hr className='w-20 text-pink-700'/>
       </div>
       <Slider {...settings} className="w-[90%] mx-auto mt-5">
         {category.map((item) => (
           <div key={item._id} className="w-full px-5">
             <img
-              className="w-40 mx-auto mb-[-70px] hover:rotate-180 hover:scale-105 duration-500 relative z-10"
+              className="w-32 h-32 object-contain mx-auto mb-[-70px] hover:rotate-180 hover:scale-105 duration-500 relative z-10"
               src={item.image.url}
               alt={item.name}
             />
