@@ -95,6 +95,42 @@ module.exports.removeOrder = asyncHandler(async (req, res) => {
 });
 
 // ✅ تحديث حالة الأوردر
+// ✅ تحديث كمية وحجم الأوردر + تحديث التوتال
+module.exports.updateOrder = asyncHandler(async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  const decoded = jwt.verify(token, process.env.SECRET_JWT);
+
+  const { quantity, size } = req.body;
+
+  const order = await Order.findById(req.params.id).populate('product');
+  if (!order) {
+    return res.status(404).json({ message: 'Order not found' });
+  }
+
+  if (order.user.toString() !== decoded.id) {
+    return res.status(403).json({ message: 'Unauthorized to update this order' });
+  }
+
+  if (quantity) order.quantity = quantity;
+  if (size) order.size = size;
+
+  // تحديث التوتال بناء على الحجم الجديد
+  const sizeInfo = order.product.sizes.find(s => s.size === order.size);
+  if (!sizeInfo) {
+    return res.status(400).json({ message: `Size '${order.size}' not available for product '${order.product.title}'` });
+  }
+
+  order.total = sizeInfo.price * order.quantity;
+
+  const updatedOrder = await order.save();
+  res.status(200).json({ message: 'Order updated successfully', order: updatedOrder });
+});
+
 module.exports.updateOrderStatus = asyncHandler(async (req, res) => {
   const { status } = req.body;
   const order = await Order.findById(req.params.id);
