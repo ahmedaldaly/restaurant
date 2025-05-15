@@ -2,72 +2,82 @@ const Order = require('../module/Order');
 const Product = require('../module/Product');
 const asyncHandler = require('express-async-handler');
 const jwt = require('jsonwebtoken');
-
-// ✅ إنشاء أوردر
+const {User} = require('../module/User')
+// ✅ إنشاء أوردر (منتج واحد فقط)
 module.exports.createOrder = asyncHandler(async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'No token provided' });
   }
+
   const token = authHeader.split(' ')[1];
   const decoded = jwt.verify(token, process.env.SECRET_JWT);
 
-  const { products } = req.body;
-  if (!Array.isArray(products) || products.length === 0) {
-    return res.status(400).json({ message: 'No products provided' });
+  const { product: productId, size = 'lg', quantity = 1 } = req.body;
+
+  if (!productId) {
+    return res.status(400).json({ message: 'Product is required' });
   }
 
-  let total = 0;
-  const updatedProducts = [];
-
-  for (const item of products) {
-    const { product: productId, size, quantity } = item;
-
-    const product = await Product.findById(productId);
-    if (!product) {
-      return res.status(404).json({ message: `Product not found: ${productId}` });
-    }
-
-    const sizeInfo = product.sizes.find((s) => s.size === size);
-    if (!sizeInfo) {
-      return res.status(400).json({ message: `Size '${size}' not found for product ${product.title}` });
-    }
-
-    const itemPrice = sizeInfo.price;
-    const itemTotal = itemPrice * quantity;
-    total += itemTotal;
-
-    updatedProducts.push({
-      product: productId,
-      size,
-      quantity,
-      price: itemPrice,
-    });
+  const product = await Product.findById(productId);
+  if (!product) {
+    return res.status(404).json({ message: `Product not found: ${productId}` });
   }
+
+  const sizeInfo = product.sizes.find((s) => s.size === size);
+  if (!sizeInfo) {
+    return res.status(400).json({ message: `Size '${size}' not found for product ${product.title}` });
+  }
+
+  const total = sizeInfo.price * quantity;
 
   const order = await Order.create({
     user: decoded.id,
-    products: updatedProducts,
+    product: productId,
+    size,
+    quantity,
     total,
   });
 
   req.io.emit('newOrder', order);
-
-  res.status(201).json({ message: 'Order created', order });
+  res.status(201).json(order);
 });
 
 // ✅ عرض كل الأوردرات
 module.exports.getAllOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find();
-  res.status(200).json(orders);
+  try {
+    // Get all orders with populated user and product data
+    const orders = await Order.find()
+      .populate('user')
+      .populate('product');
+    
+    // Format each order
+    const formattedOrders = orders.map(order => ({
+      _id: order._id,
+      user: order.user?.name, // Using optional chaining in case user is null
+      size: order.size,
+      quantity: order.quantity,
+      total: order.total,
+      status: order.status,
+      images: order.product?.images, // Optional chaining for product
+      title: order.product?.title
+    }));
+    
+    res.status(200).json(formattedOrders);
+  } catch(err) {
+    res.status(500).json({ 
+      message: 'Error fetching orders',
+      error: err.message 
+    });
+  }
 });
-
 // ✅ حذف أوردر
 module.exports.removeOrder = asyncHandler(async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'No token provided' });
   }
+
   const token = authHeader.split(' ')[1];
   const decoded = jwt.verify(token, process.env.SECRET_JWT);
 
@@ -80,7 +90,7 @@ module.exports.removeOrder = asyncHandler(async (req, res) => {
     return res.status(403).json({ message: 'Unauthorized to delete this order' });
   }
 
-  await order.deleteOne(); // 🟢 حذف الأوردر بشكل صحيح
+  await order.deleteOne();
   res.status(200).json({ message: 'Order deleted successfully' });
 });
 
@@ -98,15 +108,58 @@ module.exports.updateOrderStatus = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Order status updated', order: updatedOrder });
 });
 
-// ✅ عرض أوردرات مستخدم
+// ✅ عرض أوردرات مستخدم - معدل ومحسن
 module.exports.getUserOrders = asyncHandler(async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'No token provided' });
-  }
-  const token = authHeader.split(' ')[1];
-  const decoded = jwt.verify(token, process.env.SECRET_JWT);
+  try {
+    // التحقق من التوكن
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'No token provided' });
+    }
 
-  const userOrders = await Order.find({ user: decoded.id });
-  res.status(200).json(userOrders);
+    // فك تشفير التوكن
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.SECRET_JWT);
+
+    // جلب الطلبات مع البيانات المرتبطة
+    const userOrders = await Order.find({ user: decoded.id })
+      .populate('user', 'name email') // فقط الحقول المطلوبة من المستخدم
+      .populate('product', 'title images price'); // فقط الحقول المطلوبة من المنتج
+
+    // تنسيق البيانات قبل الإرسال
+    const formattedOrders = userOrders.map(order => ({
+      _id: order._id,
+      user: {
+        name: order.user?.name,
+        email: order.user?.email
+      },
+      product: {
+        title: order.product?.title,
+        images: order.product?.images,
+        price: order.product?.price
+      },
+      quantity: order.quantity,
+      total: order.total,
+      status: order.status,
+      createdAt: order.createdAt
+    }));
+
+    res.status(200).json(
+      formattedOrders
+    );
+
+  } catch (err) {
+    // معالجة الأخطاء بشكل أفضل
+    if (err.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token expired' });
+    }
+    res.status(500).json({ 
+      success: false,
+      message: 'Server error',
+      error: err.message 
+    });
+  }
 });
