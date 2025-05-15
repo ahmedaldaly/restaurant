@@ -7,7 +7,7 @@ import axios from 'axios'
 import { BaseUrl } from '../BaseUrl'
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { useLocale } from 'next-intl'
-
+import Link from 'next/link'
 interface Category {
   _id: string
   name: string
@@ -82,9 +82,11 @@ const Arabic = locale ==='ar'
               <img className="w-20 mx-auto mt-7" src="/spoon.svg" alt="spoon" />
               <h1 className="text-2xl font-bold m-2">{item.name}</h1>
               <div className="w-full flex justify-center mt-3">
-                <button className="text-sm font-medium text-rose-500 cursor-pointer flex justify-between w-full">
-                  {Arabic?'اطلب الان':'Order Now  '} <span className='hover:scale-125 duration-200'><FaLongArrowAltRight/></span>
-                </button>
+                <Link href={`/menu?category=${encodeURIComponent(item.name)}`}>
+  <button className="text-sm font-medium text-rose-500 cursor-pointer flex justify-between w-full">
+    {Arabic ? 'اطلب الآن' : 'Order Now'} <span className='hover:scale-125 duration-200'><FaLongArrowAltRight /></span>
+  </button>
+</Link>
               </div>
             </div>
           </div>

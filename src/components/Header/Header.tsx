@@ -61,7 +61,6 @@ const Header = () => {
   const [menu, setMenu] = useState(false);
 
   const [logUser, setLogUser] = useState(false);
-  const [orderMenu, setOrderMenu] = useState(false);
   const [userMenu, setUserMenu] = useState(false);
   const [openLang, setOpenLang] = useState(false);
 const [user, setUser] = useState<user>()
@@ -233,12 +232,13 @@ const handleLogout = () => {
           </button>}
 
           {/* Cart */}
+          <Link href='/order'>
           <button
-            onClick={() => setOrderMenu(!orderMenu)}
             className="text-xl  max-sm:w-7 max-sm:h-7  h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 flex justify-center items-center"
-          >
+            >
             <MdOutlineShoppingCart />
           </button>
+            </Link>
           <button
             onClick={() => setMenu(!menu)}
             className="text-xl hidden  max-sm:w-7 max-sm:h-7 max-md:flex h-9 w-9 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800  justify-center items-center"
@@ -283,31 +283,7 @@ const handleLogout = () => {
       </motion.header>
       
     </AnimatePresence>
-      <AnimatePresence>
-        {orderMenu && (
-          <motion.div
-            key="order-menu"
-            initial={{ x: Arabic ? "-100%" : "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: Arabic ? "-100%" : "100%" }}
-            transition={{ duration: 0.5 }}
-            className={`w-80 h-full dark:bg-black/50 backdrop-blur-lg dark:text-white dark:border-gray-700 dark:shadow-gray-600 z-50 flex flex-wrap fixed top-0 bg-white/40 border-1 border-gray-200 shadow-md ${
-              Arabic ? "left-0" : "right-0"
-            }`}
-          >
-            <div className="w-full flex justify-between px-5 text-xl pt-5">
-              <span
-                onClick={() => setOrderMenu(!orderMenu)}
-                className="text-3xl cursor-pointer hover:text-orange-500"
-              >
-                <CgClose />
-              </span>
-              <h1>{Arabic ? "عربة التسوق" : "Shoping Card"}</h1>
-            </div>
-            {/*  */}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      
       {/*  */}
     <AnimatePresence>
   {userMenu && !token&&(

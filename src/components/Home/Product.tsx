@@ -3,7 +3,8 @@ import axios from 'axios'
 import { useLocale } from 'next-intl'
 import React, { useEffect, useState } from 'react'
 import { BaseUrl } from '../BaseUrl'
-
+import toast from 'react-hot-toast'
+import Cookies from 'js-cookie'
 interface product {
   _id: string
   title: string
@@ -16,6 +17,7 @@ interface product {
 }
 
 const Product = () => {
+  const token =Cookies.get('userToken')
   const locale = useLocale()
   const Arabic = locale === 'ar'
   const [products, setProducts] = useState<product[]>([])
@@ -26,7 +28,21 @@ const Product = () => {
         setProducts(res.data.slice(0, 4)) // نعرض أول 4 منتجات فقط
       })
   }, [])
+const addOrder = async (id:string)=>{
+  try{
+    axios.post(`${BaseUrl}/api/v1/orders`,{
+      product:id
+    },{
+      headers:{
+        authorization:`Bearer ${token}`
+      }
+    })
+            toast.success(Arabic ? 'تم الطلب انتظر التأكيد' : 'Order confirmed, please wait for approval')
 
+  }catch(err){
+     toast.success(Arabic ? ' فشل الطلب': 'Order faild ')
+    console.log(err)}
+}
   return (
     <div className="px-6 md:px-16 py-20">
       <h1 className='py-10 text-center text-5xl font-bold'>
@@ -63,7 +79,9 @@ const Product = () => {
               <span className='text-lg font-bold text-rose-600'>
                 ${Math.floor(Math.random() * 10) + 10}.00
               </span>
-              <button className='bg-gradient-to-r from-pink-500 to-rose-400 text-white px-4 py-1 rounded-lg text-sm shadow-md hover:opacity-90 transition'>
+              <button
+              onClick={()=>addOrder(item._id)}
+              className='bg-gradient-to-r from-pink-500 to-rose-400 text-white px-4 py-1 rounded-lg text-sm shadow-md hover:opacity-90 transition'>
                 {Arabic ? 'أضف للسلة' : 'Add to Cart'}
               </button>
             </div>
