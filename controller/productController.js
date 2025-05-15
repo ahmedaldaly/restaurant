@@ -126,7 +126,7 @@ module.exports.removeProduct = asyncHandler(async (req, res) => {
   })
 module.exports.getProductByCategory = asyncHandler(async (req, res) => {
   try {
-    const { category } = req.body;
+    const { category } = req.query;
     
     let find;
 
