@@ -49,7 +49,7 @@ function validateRegister(obj){
         email:joi.string().required().min(5).max(50).email(),
         password:joi.string().min(8).required(),
         phone:joi.number().required(),
-        phone:joi.string().required(),
+        address:joi.string().required(),
         token: joi.string()
     })
     return schema.validate(obj)
