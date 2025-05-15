@@ -6,7 +6,7 @@ const Footer = () => {
   const Arabic = locale === 'ar'
 
   return (
-    <footer className="bg-gray-100 mt-10 dark:bg-gray-900 py-10">
+    <footer className=" mt-10 border-t-1 border-gray-200 dark:border-gray-700 py-10">
       <div
         className={`container mx-auto px-6 md:px-12 flex flex-col md:flex-row ${
           Arabic ? 'md:flex-row-reverse' : ''

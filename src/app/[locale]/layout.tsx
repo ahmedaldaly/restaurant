@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { Cairo } from 'next/font/google';
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
+import { Toaster } from 'react-hot-toast'
 
 export const metadata: Metadata = {
   title: "Beit Meryam",
@@ -48,6 +49,7 @@ export default async function LocaleLayout({
     >
       <body className=" text-black dark:text-white bg-[url(/bg.png)] bg-fixed bg-cover bg-center dark:bg-none dark:bg-black">
         <NextIntlClientProvider>
+               <Toaster position="top-right" reverseOrder={false} />
           <Header/>
           {children}
           <Footer/>
