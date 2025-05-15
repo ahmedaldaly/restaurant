@@ -347,6 +347,7 @@ const handleLogout = () => {
         >
           {Arabic ? "تسجيل دخول" : "Log In"}
         </motion.button>
+        <Link onClick={()=>setUserMenu(!userMenu)} className="text-orange-500" href='/register'>/{Arabic?'تسجيل حساب جديد':'Register'}</Link>
       </form>
     </motion.div>
   )}
