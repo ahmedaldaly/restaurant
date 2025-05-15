@@ -8,6 +8,7 @@ import { BaseUrl } from '@/components/BaseUrl'
 import toast from 'react-hot-toast'
 import Images from '@/components/Home/Images'
 import { useSearchParams } from 'next/navigation'
+import PageWrapper from '@/components/PageWrapper'
 
 type FormData = {
   bookingIn: string
@@ -154,6 +155,8 @@ const Page = () => {
   }
 
   return (
+    <PageWrapper>
+
     <div>
       {/* حجز */}
       <section className='w-full h-[45vh] relative bg-white/60 bg-no-repeat bg-[length:100%_200px] bg-bottom bg-[url(/bgmenu.png)] '>
@@ -253,6 +256,7 @@ const Page = () => {
 
       <Images />
     </div>
+</PageWrapper>
   )
 }
 

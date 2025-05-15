@@ -4,6 +4,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { useLocale } from 'next-intl';
+import PageWrapper from '@/components/PageWrapper';
 
 interface Booking {
   _id: string;
@@ -72,6 +73,8 @@ const Page = () => {
   };
 
   return (
+    <PageWrapper>
+
     <div className="w-full min-h-screen p-4 space-y-8" dir={Arabic ? 'rtl' : 'ltr'}>
       {/* الحجوزات */}
       <div>
@@ -144,6 +147,7 @@ const Page = () => {
         )}
       </div>
     </div>
+    </PageWrapper>
   );
 };
 

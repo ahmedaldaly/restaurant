@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { useForm } from "react-hook-form"
 import { useLocale } from 'next-intl'
 import Cookies from 'js-cookie'
+import PageWrapper from '@/components/PageWrapper'
 
 type FormData = {
   name: string
@@ -44,6 +45,8 @@ const [loading, setLoading] = useState(false)
   })
 
   return (
+    <PageWrapper>
+
     <div className="w-full min-h-screen flex justify-center items-center   p-4" dir={Arabic ? 'rtl' : 'ltr'}>
       <form onSubmit={onSubmit} className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg w-full max-w-xl space-y-6 border border-gray-200 dark:border-gray-700">
         <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-4">
@@ -125,6 +128,7 @@ const [loading, setLoading] = useState(false)
         </button>
       </form>
     </div>
+    </PageWrapper>
   )
 }
 

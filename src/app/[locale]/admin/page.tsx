@@ -11,6 +11,7 @@ import AddCategory from '@/components/admin/AddCategory';
 import AddImage from '@/components/admin/AddImage';
 import Orders from '@/components/admin/Orders';
 import { useLocale } from 'next-intl';
+import PageWrapper from '@/components/PageWrapper';
 
 const AdminPage = () => {
   const locale = useLocale();
@@ -42,6 +43,8 @@ const AdminPage = () => {
   const buttons = Arabic ? [...tabs].reverse() : tabs;
 
   return (
+    <PageWrapper>
+
     <div className='w-full min-h-screen dark:bg-black/90'>
 
     <div className="w-[70%] mx-auto pt-10 max-md:w-[90%]">
@@ -73,6 +76,7 @@ const AdminPage = () => {
       </Slider>
     </div>
         </div>
+        </PageWrapper>
   );
 };
 
