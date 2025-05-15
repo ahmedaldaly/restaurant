@@ -124,12 +124,26 @@ module.exports.removeProduct = asyncHandler(async (req, res) => {
       res.status(200).json(edit)
     }catch(err){res.status(500).json(err)}
   })
+module.exports.getProductByCategory = asyncHandler(async (req, res) => {
+  try {
+    const { title } = req.query;
+    
+    let find;
 
-  module.exports.getProductByCategory = asyncHandler(async(req,res)=>{
-    try{
-      console.log(req.query.title)
-      const find = await Product.find({category:req.query.title})
-      if(!find){res.status(404).json({message:'not found'})}
-      res.status(200).json(find)
-    }catch(err){res.status(500).json(err)}
-  })
+    if (title && title.trim() !== '') {
+      // لو فيه title مش فاضي
+      find = await Product.find({ category: title });
+    } else {
+      // لو مفيش title → رجع الكل
+      find = await Product.find({});
+    }
+
+    if (!find || find.length === 0) {
+      return res.status(404).json({ message: 'not found' });
+    }
+
+    res.status(200).json({ data: find });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err });
+  }
+});
