@@ -1,7 +1,7 @@
 'use client'
 import { BaseUrl } from '@/components/BaseUrl'
 import axios from 'axios'
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from "react-hook-form"
 import { useLocale } from 'next-intl'
 import Cookies from 'js-cookie'
@@ -23,9 +23,10 @@ const Page = () => {
 
   const locale = useLocale()
   const Arabic = locale === 'ar'
-
+const [loading, setLoading] = useState(false)
   const onSubmit = handleSubmit(async (data) => {
     try {
+      setLoading(true)
       const res = await axios.post(`${BaseUrl}/api/v1/auth/register`, {
         name:data.name,
         email:data.email,
@@ -34,8 +35,10 @@ const Page = () => {
         password:data.password
       })
       Cookies.set('userToken',res.data.token)
+      setLoading(false)
       window.location.href ='/'
     } catch (err) {
+      setLoading(false)
       console.error('فشل التسجيل', err)
     }
   })
@@ -117,7 +120,8 @@ const Page = () => {
           type="submit"
           className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition duration-200 font-semibold"
         >
-          {Arabic ? 'تسجيل' : 'Register'}
+          {loading?Arabic ? 'تحميل ....' : 'Loading ...':Arabic ? 'تسجيل' : 'Register'}
+          
         </button>
       </form>
     </div>

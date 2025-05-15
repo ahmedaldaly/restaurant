@@ -7,6 +7,7 @@ import { FaShoppingCart, FaUtensils, FaTruck } from 'react-icons/fa'
 import About from '@/components/Home/About'
 import Product from '@/components/Home/Product'
 import Images from '@/components/Home/Images'
+import OrdersListener from '@/components/OrderListener'
 
 const Page = () => {
   const locale = useLocale()
@@ -57,6 +58,7 @@ const Page = () => {
     </div>
     {/*  */}
     <Images/>
+    <OrdersListener/>
     </div>
   )
 }
