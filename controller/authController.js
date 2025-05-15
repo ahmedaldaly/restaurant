@@ -17,6 +17,8 @@ module.exports.Register = asyncHandler(async (req, res) => {
     const newUser = new User({
         name: req.body.name,
         email: req.body.email,
+        phone:req.body.phone,
+        address:req.body.address,
         password: hashedPassword
     });
 
@@ -38,6 +40,8 @@ module.exports.Register = asyncHandler(async (req, res) => {
         name:savedUser.name,
         isAdmin:savedUser.isAdmin,
         token:savedUser.token,
+        phone:savedUser.phone,
+        address:savedUser.address,
     });
 });
 

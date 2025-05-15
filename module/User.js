@@ -16,6 +16,16 @@ const UserSchema = new mongoose.Schema({
         maxlength:50 ,
         unique:true
     },
+    phone:{
+        required:true,
+        trim:true,
+        type:Number,
+    },
+    address:{
+        required:true,
+        trim:true,
+        type:String,
+    },
     password:{
         required:true,
         trim:true,
@@ -38,6 +48,8 @@ function validateRegister(obj){
         name: joi.string().required().min(5).max(30),
         email:joi.string().required().min(5).max(50).email(),
         password:joi.string().min(8).required(),
+        phone:joi.number().required(),
+        phone:joi.string().required(),
         token: joi.string()
     })
     return schema.validate(obj)
