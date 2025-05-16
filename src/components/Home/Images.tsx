@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { BaseUrl } from "../BaseUrl";
 import { useLocale } from "next-intl";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import {  Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -35,10 +35,10 @@ const Images = () => {
       </div>
 
       <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
+        modules={[ Pagination, Autoplay]}
         spaceBetween={30}
         slidesPerView={1}
-        navigation
+        
         pagination={{ clickable: true }}
         autoplay={{ delay: 3000 }}
         loop={true}

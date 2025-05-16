@@ -74,27 +74,38 @@ const Arabic = locale ==='ar'
       <Slider {...settings} className="w-[90%] mx-auto mt-5">
         {category.map((item , i) => (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 ,delay: i *0.2}}
-          key={item._id} className="w-full px-5">
-            <img
-              className="w-32 h-32 object-contain mx-auto mb-[-70px] hover:rotate-180 hover:scale-105 duration-500 relative z-10"
-              src={item.image.url}
-              alt={item.name}
-            />
-            <div className="categor w-full h-52 bg-rose-400/10 rounded-3xl p-5 text-center">
-              <img className="w-20 mx-auto mt-7" src="/spoon.svg" alt="spoon" />
-              <h1 className="text-2xl font-bold m-2">{item.name}</h1>
-              <div className="w-full flex justify-center mt-3">
-                <Link href={`/menu?category=${encodeURIComponent(item.name)}`}>
-  <button className="text-sm font-medium text-rose-500 cursor-pointer flex justify-between w-full">
-    {Arabic ? 'اطلب الآن' : 'Order Now'} <span className='hover:scale-125 duration-200'><FaLongArrowAltRight /></span>
-  </button>
-</Link>
-              </div>
-            </div>
-          </motion.div>
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.3, delay: i * 0.2 }}
+  key={item._id}
+  className="px-4"
+>
+  <div className="relative flex flex-col items-center">
+    <div className="w-28 h-28 bg-white dark:bg-gray-800 rounded-full shadow-md flex items-center justify-center z-10 mb-[-40px] transition-transform duration-500 hover:scale-110 hover:rotate-180">
+      <img
+        src={item.image.url}
+        alt={item.name}
+        className="w-20 h-20 object-contain"
+      />
+    </div>
+
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg pt-16 pb-6 px-6 text-center w-full">
+      <h2 className="text-xl font-semibold text-gray-800 dark:text-white">{item.name}</h2>
+      <p className="mt-2 text-sm text-gray-500 dark:text-gray-300">
+        {Arabic ? "تصفح أفضل الأطباق" : "Explore top dishes"}
+      </p>
+      <Link href={`/menu?category=${encodeURIComponent(item.name)}`}>
+        <button className="mt-4 inline-flex items-center gap-2 text-sm text-rose-500 dark:text-rose-400 font-medium hover:underline">
+          {Arabic ? 'اطلب الآن' : 'Order Now'} 
+          <span className="hover:translate-x-1 transition-transform duration-200">
+            <FaLongArrowAltRight />
+          </span>
+        </button>
+      </Link>
+    </div>
+  </div>
+</motion.div>
+
         ))}
       </Slider>
     </div>

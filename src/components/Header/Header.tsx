@@ -114,6 +114,7 @@ const handleLogout = () => {
 
   return (
     <>
+    <ToastContainer/>
     <AnimatePresence>
       <motion.header
         key="main-header"
