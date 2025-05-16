@@ -19,6 +19,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CgClose } from "react-icons/cg";
 import axios from "axios";
 import { BaseUrl } from "../BaseUrl";
+import { toast, ToastContainer } from 'react-toastify';
 type FormData = {
   email: string
   password: string
@@ -44,11 +45,14 @@ const Header = () => {
         password:data.password
       })
       .then((data)=>{
+        toast.success('log in success')
         console.log(data.data)
         cookie.set('userToken',data.data.token)
         window.location.href ='/'
       })
-    }catch(err){console.log(err)}
+    }catch(err){
+      toast.error('log in faild')
+      console.log(err)}
   })
   const locale = useLocale();
   const pathname = usePathname();

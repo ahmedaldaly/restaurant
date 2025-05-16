@@ -8,6 +8,7 @@ import { BaseUrl } from '../BaseUrl'
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { useLocale } from 'next-intl'
 import Link from 'next/link'
+import { motion } from 'framer-motion' // ✅ إضافة framer-motion
 interface Category {
   _id: string
   name: string
@@ -71,8 +72,12 @@ const Arabic = locale ==='ar'
         <hr className='w-20 text-pink-700'/>
       </div>
       <Slider {...settings} className="w-[90%] mx-auto mt-5">
-        {category.map((item) => (
-          <div key={item._id} className="w-full px-5">
+        {category.map((item , i) => (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2 ,delay: i *0.2}}
+          key={item._id} className="w-full px-5">
             <img
               className="w-32 h-32 object-contain mx-auto mb-[-70px] hover:rotate-180 hover:scale-105 duration-500 relative z-10"
               src={item.image.url}
@@ -89,7 +94,7 @@ const Arabic = locale ==='ar'
 </Link>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </Slider>
     </div>

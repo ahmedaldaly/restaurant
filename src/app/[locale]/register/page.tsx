@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form"
 import { useLocale } from 'next-intl'
 import Cookies from 'js-cookie'
 import PageWrapper from '@/components/PageWrapper'
-
+import { toast, ToastContainer } from 'react-toastify';
 type FormData = {
   name: string
   email: string
@@ -36,10 +36,12 @@ const [loading, setLoading] = useState(false)
         password:data.password
       })
       Cookies.set('userToken',res.data.token)
+      toast.success('register success')
       setLoading(false)
       window.location.href ='/'
     } catch (err) {
       setLoading(false)
+       toast.error('Review your data ')
       console.error('فشل التسجيل', err)
     }
   })
@@ -128,6 +130,7 @@ const [loading, setLoading] = useState(false)
         </button>
       </form>
     </div>
+    <ToastContainer/>
     </PageWrapper>
   )
 }

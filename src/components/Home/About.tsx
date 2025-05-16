@@ -1,7 +1,8 @@
+'use client'
 import { useLocale } from 'next-intl'
 import React from 'react'
 import { FaShoppingCart, FaUtensils, FaTruck } from 'react-icons/fa'
-
+import { motion } from 'framer-motion' 
 const About = () => {
   const locale = useLocale()
   const Arabic = locale === 'ar'
@@ -19,13 +20,20 @@ const About = () => {
       </div>
 
       <section className="flex flex-col max-lg:flex-wrap justify-center md:flex-row items-center gap-12 px-4 sm:px-6 md:px-0">
-        <img
+        <motion.img 
+        initial={{opacity:0 ,scale:0.2}}
+        whileInView={{opacity:1 ,scale:1}}
+        transition={{duration:0.3}}
           src="/about.png"
           alt="about"
           className="w-full md:w-[550px] rounded-3xl shadow-xl object-cover"
         />
 
-        <div className="max-w-xl text-center md:text-left">
+        <motion.div
+         initial={{opacity:0 ,scale:0.2}}
+        whileInView={{opacity:1 ,scale:1}}
+        transition={{duration:0.3}}
+        className="max-w-xl text-center md:text-left">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-rose-600 mb-4 leading-snug">
             {Arabic ? 'اختر الطعام الصحي الطازج' : 'Choosing Healthy & Fresh Food'}
           </h2>
@@ -87,7 +95,7 @@ const About = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
     </div>
   )
