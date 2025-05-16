@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { useLocale } from "next-intl";
+import Link from "next/link";
 
 const Hero = () => {
   const locale = useLocale();
@@ -27,12 +28,16 @@ const Hero = () => {
 
         {/* Buttons */}
         <div className="flex gap-4">
+           <Link href='/menu'>
           <button className="bg-gradient-to-r from-pink-500 cursor-pointer to-rose-400 text-white font-semibold px-6 py-3 rounded-lg shadow-[0_4px_20px_rgba(249,115,129,0.4)] hover:brightness-105 transition">
             {Arabic?'البدء':'Get Started'}
           </button>
+           </Link>
+          <Link href='/menu'>
           <button className="bg-gradient-to-r hover:bg-gradient-to-l duration-300 from-black to-gray-600 cursor-pointer text-white font-semibold px-6 py-3 rounded-lg  hover:brightness-105 transition">
           {Arabic?'اطلب الان':'Order Now'}
           </button>
+          </Link>
         </div>
       </div>
 

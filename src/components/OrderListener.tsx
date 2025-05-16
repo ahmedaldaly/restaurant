@@ -9,7 +9,7 @@ const socket = io(`${BaseUrl}`);
 
 const OrdersListener = () => {
   useEffect(() => {
-    const audio = new Audio('/mut.m4a'); // داخل مجلد public
+    const audio = new Audio('/aut.m4a'); // داخل مجلد public
 
     socket.on('newOrder', (order) => {
       console.log('📦 أوردر جديد:', order);

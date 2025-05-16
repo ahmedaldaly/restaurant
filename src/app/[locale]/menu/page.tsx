@@ -242,7 +242,13 @@ const Page = () => {
                   </div>
 
                   <button
-                    onClick={() => addOrder(item._id)}
+                     onClick={() => {
+                  if (token && token.length > 0) {
+                    addOrder(item._id);
+                  } else {
+                    window.location.href = "/register";
+                  }
+                }}
                     className="bg-pink-100 text-pink-600 text-sm px-4 py-1 rounded-md hover:bg-pink-200 transition"
                   >
                     {Arabic ? 'أضف للسلة' : 'Add to Cart'}

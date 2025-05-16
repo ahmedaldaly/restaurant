@@ -17,6 +17,8 @@ interface Order {
   user: {
     name: string;
     email: string;
+    address: string;
+    phone: number;
   };
   product: {
     title: string;
@@ -158,6 +160,12 @@ const Page = () => {
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
                       {Arabic ? ' المستخدم' : 'User '}: {o.user.name}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      {Arabic ? ' العنوان' : 'Address '}: {o.user.address}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      {Arabic ? ' الهاتف' : 'Phone '}: {o.user.phone}
                     </p>
                     <p className="text-sm">
                       {Arabic ? 'الحالة' : 'Status'}: {o.status}
