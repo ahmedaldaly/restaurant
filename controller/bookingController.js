@@ -31,6 +31,8 @@ module.exports.getBooking = asyncHandler(async (req, res) => {
     const result = bookings.map(booking => ({
       _id: booking._id,
       email: booking.user.email,
+      phone: booking.user.phone,
+      address: booking.user.address,
       name: booking.user.name,
       bookingIn: booking.bookingIn // أو booking.bookingIn لو دا اسم الحقل عندك
     }));

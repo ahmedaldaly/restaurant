@@ -55,6 +55,8 @@ module.exports.getAllOrders = asyncHandler(async (req, res) => {
     const formattedOrders = orders.map(order => ({
       _id: order._id,
       user: order.user?.name, // Using optional chaining in case user is null
+      phone: order.user?.phone, // Using optional chaining in case user is null
+      address: order.user?.address, // Using optional chaining in case user is null
       size: order.size,
       quantity: order.quantity,
       total: order.total,

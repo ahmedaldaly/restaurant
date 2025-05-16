@@ -4,9 +4,13 @@ const { Server } = require('socket.io');
 const dotenv = require('dotenv').config();
 const ConnectDB = require('./config/ConnectDB');
 const rateLimit = require('express-rate-limit');
-const cors = require('cors')
+const cors = require('cors');
+const helmet = require('helmet');
+const xss = require('xss');
+
 const app = express();
 const server = http.createServer(app); // استخدام http بدلاً من app.listen مباشرة
+
 // تحديد الحد: مثلاً 100 طلب في الدقيقة
 const limiter = rateLimit({
   windowMs: 60 * 1000, // 1 دقيقة
@@ -16,36 +20,64 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
-// تطبيقه على كل الروترات:
-app.use(limiter);
+// Middleware لتنظيف بيانات الطلب (Body و Query) من XSS
+const sanitizeRequest = (req, res, next) => {
+  if (req.body) {
+    for (const key in req.body) {
+      if (typeof req.body[key] === 'string') {
+        req.body[key] = xss(req.body[key]);
+      }
+    }
+  }
+
+  if (req.query) {
+    for (const key in req.query) {
+      if (typeof req.query[key] === 'string') {
+        req.query[key] = xss(req.query[key]);
+      }
+    }
+  }
+
+  next();
+};
+
+// ترتيب الميدل ويرز مهم جداً:
+app.use(express.json({ limit: '10kb' }));  // قراءة بيانات JSON بحجم محدود
+app.use(sanitizeRequest);                  // تنظيف البيانات من هجمات XSS
+app.use(helmet());                         // أمان HTTP headers
+app.use(cors({
+  origin: '*',
+  credentials: true, // هنا لازم تحذر لأن السماح بالكوكيز مع origin = '*' غير مسموح غالباً، فتقدر تلغي credentials لو مش محتاجها
+}));;
+app.use(limiter);                          // تحديد عدد الطلبات (Rate Limiting)
+
 const io = new Server(server, {
   cors: {
-    origin: '*', // لو الفرونت على دومين مختلف غير الباك
-    methods: ['GET', 'POST']
+    origin: '*',
+    methods: ['GET', 'POST'],
   }
 });
-app.use(cors());
-// تخزين الـ socket.io في كل request
 app.use((req, res, next) => {
   req.io = io;
   next();
 });
 
-app.use(express.json());
+// اتصال بقاعدة البيانات
 ConnectDB();
-app.get('/',(req,res)=>{
-  res.status(200).json({message:'hello'})
-})
-// الراوترات
+
+// Routes
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'hello' });
+});
 app.use('/api/v1/auth', require('./router/auth'));
 app.use('/api/v1/category', require('./router/category'));
 app.use('/api/v1/product', require('./router/product'));
-app.use('/api/v1/orders', require('./router/order')); // لا تنسَ تعمل راوتر الأوردر
-app.use('/api/v1/image', require('./router/image')); 
-app.use('/api/v1/booking', require('./router/booking')); 
-app.use('/api/v1/user', require('./router/user')); 
+app.use('/api/v1/orders', require('./router/order'));
+app.use('/api/v1/image', require('./router/image'));
+app.use('/api/v1/booking', require('./router/booking'));
+app.use('/api/v1/user', require('./router/user'));
 
-// الاتصال بالسوكت
+// Socket.io connection
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
 
@@ -54,6 +86,8 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(4000, () => {
-  console.log('Server is running on port 4000');
+// تشغيل السيرفر
+const PORT = process.env.PORT || 4000;
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
