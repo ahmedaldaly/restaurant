@@ -1,24 +1,60 @@
-const Booking = require('../module/Booking');
+const {Booking , bookingValidation} = require('../module/Booking');
 const {User} = require('../module/User')
 const asyncHandler = require('express-async-handler');
 const jwt = require('jsonwebtoken')
+
 module.exports.addBooking = asyncHandler(async (req, res) => {
-    try {
-        const token = await req.headers.authorization.split(' ')[1];
-        if (!token) { res.status(404).json({ message: 'No token provided' }) }
-        const decoded = await jwt.verify(token, process.env.SECRET_JWT);
-        const check = await Booking.findOne({user:decoded.id, bookingIn:req.body.bookingIn})
-        if(check){
-            res.status(400).json({message:'The reservation is already in place.'})
-        }
-        const newBooking = new Booking ({
-            user:decoded.id,
-            bookingIn:req.body.bookingIn
-        })
-        const save = await newBooking.save()
-        res.status(201).json(save)
-    } catch (err) { res.status(500).json(err) }
-})
+
+     // التحقق من وجود التوكن
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+  
+  const token = authHeader.split(' ')[1];
+  
+  // التحقق من صحة التوكن
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.SECRET_JWT);
+  } catch (err) {
+    return res.status(401).json({ message: 'Invalid token' });
+  }
+  
+ const dataToValidate = {
+  user: decoded.id,
+  bookingIn: req.body.bookingIn,
+  status: req.body.status,
+};
+
+const { error } = bookingValidation(dataToValidate);
+if (error) {
+  return res.status(400).json({ message: error.details[0].message });
+}
+
+ 
+
+  // التحقق من وجود حجز سابق بنفس المستخدم والتاريخ
+  const existingBooking = await Booking.findOne({
+    user: decoded.id,
+    bookingIn: req.body.bookingIn,
+  });
+
+  if (existingBooking) {
+    return res.status(400).json({ message: 'The reservation is already in place.' });
+  }
+
+  // إنشاء الحجز الجديد
+  const newBooking = new Booking({
+    user: decoded.id,
+    bookingIn: req.body.bookingIn,
+    status: req.body.status || undefined, // لو أرسل status يكون معاه
+  });
+
+  const savedBooking = await newBooking.save();
+
+  res.status(201).json(savedBooking);
+});
 
 module.exports.getBooking = asyncHandler(async (req, res) => {
   try {

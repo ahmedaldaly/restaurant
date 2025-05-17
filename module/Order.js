@@ -1,6 +1,6 @@
 // models/Order.js
 const mongoose = require('mongoose');
-
+const Joi = require('joi');
 const orderSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -31,4 +31,20 @@ const orderSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-module.exports = mongoose.model('Order', orderSchema);
+const Order =mongoose.model('Order', orderSchema);
+
+function orderValidation(obj) {
+  const schema = Joi.object({
+    user: Joi.string().hex().length(24).required(),
+    product: Joi.string().hex().length(24).required(),
+    size: Joi.string().valid('lg', 'md', 'sm').default('lg'),
+    quantity: Joi.number().integer().min(1).default(1),
+    total: Joi.number().required(),
+    status: Joi.string().valid('pending', 'shipped', 'delivered', 'cancelled').default('pending'),
+  });
+  return schema.validate(obj);
+}
+module.exports = {
+Order ,
+orderValidation
+}

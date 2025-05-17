@@ -1,4 +1,4 @@
-const Product = require('../module/Product'); // استخدم التصدير الصحيح
+const {Product , productValidation} = require('../module/Product'); // استخدم التصدير الصحيح
 const { validetCategory, Category } = require('../module/Category');
 const asyncHandler = require('express-async-handler');
 const cloudinary = require('../config/Cloud');

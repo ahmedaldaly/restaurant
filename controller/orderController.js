@@ -1,5 +1,5 @@
-const Order = require('../module/Order');
-const Product = require('../module/Product');
+const {Order,orderValidation} = require('../module/Order');
+const {Product} = require('../module/Product');
 const asyncHandler = require('express-async-handler');
 const jwt = require('jsonwebtoken');
 const {User} = require('../module/User')
@@ -31,18 +31,25 @@ module.exports.createOrder = asyncHandler(async (req, res) => {
 
   const total = sizeInfo.price * quantity;
 
-  const order = await Order.create({
+  const dataToValidate = {
     user: decoded.id,
     product: productId,
     size,
     quantity,
     total,
-  });
+    status: req.body.status || 'pending',
+  };
+
+  const { error } = orderValidation(dataToValidate);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+
+  const order = await Order.create(dataToValidate);
 
   req.io.emit('newOrder', order);
   res.status(201).json(order);
 });
-
 // ✅ عرض كل الأوردرات
 module.exports.getAllOrders = asyncHandler(async (req, res) => {
   try {

@@ -1,3 +1,4 @@
+const Joi = require('joi');
 const mongoose = require('mongoose');
 
 const ImageSchema = new mongoose.Schema({
@@ -15,4 +16,14 @@ const ImageSchema = new mongoose.Schema({
 });
 
 const Image = mongoose.model('Image', ImageSchema);
-module.exports = Image;
+function ImageValidate (obj) {
+  const Schema = Joi.object({
+    url: Joi.string().required(),
+    id: Joi.string().required()
+  })
+  return Schema.validate()
+}
+module.exports = {
+  Image ,
+  ImageValidate
+};

@@ -1,10 +1,12 @@
-const Image = require('../module/Image');
+const {Image ,
+  ImageValidate} = require('../module/Image');
 const asyncHandler = require('express-async-handler');
 const streamifier = require('streamifier');
 const cloudinary = require('../config/Cloud');
 
 module.exports.addImage = asyncHandler(async (req, res) => {
   try {
+    
     const streamUpload = (buffer) => {
       return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
@@ -22,6 +24,8 @@ module.exports.addImage = asyncHandler(async (req, res) => {
     const savedImages = await Promise.all(
       req.files.map(async (file) => {
         const result = await streamUpload(file.buffer);
+        const {error} =ImageValidate(result)
+        if(error){res.status(400).json(error)}
         const newImage = new Image({
           url: result.secure_url,
           id: result.public_id,

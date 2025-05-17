@@ -1,7 +1,9 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
+const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
+require('./middelware/validateEnv'); // ✅ تحقق من env
 const ConnectDB = require('./config/ConnectDB');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
@@ -10,7 +12,7 @@ const helmet = require('helmet');
 const app = express();
 const server = http.createServer(app);
 
-// ✅ Rate limiter خاص بـ login/signup (5 محاولات كل 15 دقيقة)
+// ✅ Rate limiter للـ login/signup
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5,
@@ -19,6 +21,7 @@ const authLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+// ✅ Rate limiter عام
 const generalLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 100,
@@ -27,7 +30,7 @@ const generalLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-// ✅ إعادة توجيه HTTP إلى HTTPS (في بيئة الإنتاج فقط)
+// ✅ إعادة توجيه HTTP إلى HTTPS (في الإنتاج فقط)
 app.use((req, res, next) => {
   if (process.env.NODE_ENV === 'production') {
     if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
@@ -39,11 +42,8 @@ app.use((req, res, next) => {
     next();
   }
 });
-if (!process.env.CLOUD_NAME || !process.env.CLOUD_KEY || !process.env.CLOUD_SECRET ||!process.env.CONNECT_DB ||!process.env.SECRET_JWT) {
-  console.error('Error: Missing required Cloudinary environment variables.');
-  process.exit(1);
-}
-// ✅ ترتيب الـ Middleware
+
+// ✅ Middlewares
 app.use(express.json({ limit: '10kb' }));
 app.use(helmet({
   contentSecurityPolicy: {
@@ -59,18 +59,18 @@ app.use(helmet({
     }
   },
   hsts: {
-    maxAge: 31536000,        // سنة واحدة بالثواني
+    maxAge: 31536000,
     includeSubDomains: true,
     preload: true,
   }
 }));
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
   credentials: true,
 }));
 
-// ✅ تنظيف يدوي لمنع NoSQL Injection
+// ✅ تنظيف البيانات من NoSQL Injection
 const preventNoSQLInjection = (obj) => {
   for (const key in obj) {
     if (typeof obj[key] === 'object' && obj[key] !== null) {
@@ -89,6 +89,7 @@ app.use((req, res, next) => {
   next();
 });
 
+// ✅ تنظيف من XSS
 const sanitizeXSS = (value) => {
   if (typeof value === 'string') {
     return value.replace(/<.*?>/g, '');
@@ -107,39 +108,41 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  if (req.params) {
-    for (const key in req.params) {
-      if (typeof req.params[key] === 'string') {
-        req.params[key] = req.params[key].replace(/<.*?>/g, '');
-      }
-    }
-  }
-  next();
-});
-
-// إعداد Socket.io
+// ✅ Socket.io إعداد
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
     methods: ['GET', 'POST'],
   }
 });
+
+// ✅ Socket.io JWT authentication
+io.use((socket, next) => {
+  try {
+    const token = socket.handshake.auth.token || socket.handshake.query.token;
+    if (!token) return next(new Error('Authentication error: Token not provided'));
+
+    const decoded = jwt.verify(token, process.env.SECRET_JWT);
+    socket.user = decoded;
+    next();
+  } catch (err) {
+    console.error('Socket auth failed:', err.message);
+    return next(new Error('Authentication error'));
+  }
+});
+
+// تمرير socket.io لكل الطلبات
 app.use((req, res, next) => {
   req.io = io;
   next();
 });
 
-// اتصال قاعدة البيانات
+// ✅ اتصال قاعدة البيانات
 ConnectDB();
 
-// Routes
-app.get('/', (req, res) => {
-  res.status(200).json({ message: 'hello' });
-});
-
+// ✅ Routes
+app.get('/', (req, res) => res.status(200).json({ message: 'hello' }));
 app.use('/api/v1/auth', authLimiter, require('./router/auth'));
-
 app.use('/api/v1/category', require('./router/category'));
 app.use('/api/v1/product', require('./router/product'));
 app.use('/api/v1/orders', require('./router/order'));
@@ -147,17 +150,15 @@ app.use('/api/v1/image', require('./router/image'));
 app.use('/api/v1/booking', require('./router/booking'));
 app.use('/api/v1/user', require('./router/user'));
 
-// Socket.io connection
+// ✅ Socket.io connection
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
-
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
   });
 });
 
-
-// Global Error Handler
+// ✅ Global Error Handler
 app.use((err, req, res, next) => {
   console.error(err);
   const statusCode = err.statusCode || 500;
@@ -165,8 +166,8 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({ success: false, error: message });
 });
 
-// تشغيل السيرفر
+// ✅ تشغيل السيرفر
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
