@@ -5,7 +5,8 @@ import React, { useEffect, useState } from "react";
 import { BaseUrl } from "../BaseUrl";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
-import { motion } from 'framer-motion' // ✅ إضافة framer-motion
+import { motion } from "framer-motion"; // ✅ إضافة framer-motion
+import Link from "next/link";
 
 interface product {
   _id: string;
@@ -64,11 +65,11 @@ const Product = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {products.map((item , i) => (
+        {products.map((item, i) => (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 ,delay: i *0.2}}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: i * 0.2 }}
             key={item._id}
             className="bg-white/30 backdrop-blur-md rounded-2xl p-5 shadow-md border border-white/60 transition-all hover:scale-105"
           >
@@ -107,9 +108,11 @@ const Product = () => {
           </motion.div>
         ))}
       </div>
+      <Link href='/menu'>
       <button className="bg-gradient-to-r from-pink-500 cursor-pointer to-rose-400 text-white font-semibold px-6 py-3 rounded-lg shadow-[0_4px_20px_rgba(249,115,129,0.4)] hover:brightness-105 transition my-10">
         {Arabic ? "جميع المنتجات" : "All Product"}
       </button>
+      </Link>
     </div>
   );
 };

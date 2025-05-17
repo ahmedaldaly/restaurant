@@ -177,12 +177,12 @@ const Page = () => {
                   <select
                     value={o.status}
                     onChange={(e) => updateOrderStatus(o._id, e.target.value)}
-                    className="border px-2 py-1 rounded"
+                    className="border px-2 py-1 rounded dark:bg-gray-700 "
                   >
-                    <option value="pending">{Arabic ? 'قيد الانتظار' : 'Pending'}</option>
-                    <option value="shipped">{Arabic ? 'تم الشحن' : 'Shipped'}</option>
-                    <option value="delivered">{Arabic ? 'تم التوصيل' : 'Delivered'}</option>
-                    <option value="cancelled">{Arabic ? 'ملغي' : 'Cancelled'}</option>
+                    <option value="pending    ">{Arabic ? 'قيد الانتظار' : 'Pending'}</option>
+                    <option value="shipped    ">{Arabic ? 'تم الشحن' : 'Shipped'}</option>
+                    <option value="delivered  ">{Arabic ? 'تم التوصيل' : 'Delivered'}</option>
+                    <option value="cancelled  ">{Arabic ? 'ملغي' : 'Cancelled'}</option>
                   </select>
                   <button
                     onClick={() => deleteOrder(o._id)}

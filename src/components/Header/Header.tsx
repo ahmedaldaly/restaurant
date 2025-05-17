@@ -51,7 +51,7 @@ const Header = () => {
         window.location.href ='/'
       })
     }catch(err){
-      toast.error('log in faild')
+     toast.error('Incorrect password or email')
       console.log(err)}
   })
   const locale = useLocale();
