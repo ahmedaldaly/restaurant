@@ -6,18 +6,38 @@ const streamifier = require('streamifier'); // تأكد من تثبيته: npm i
 
 module.exports.addProduct = asyncHandler(async (req, res) => {
   try {
-    const { title, description,descriptionAr, category, sizes } = req.body;
+    const { title, description, descriptionAr, category, sizes } = req.body;
 
-    // التأكد من وجود الكاتيجوري
+    // ✅ تحويل sizes إلى JSON إذا كانت سترينج
+    const parsedSizes = typeof sizes === 'string' ? JSON.parse(sizes) : sizes;
+
+    // ✅ صور وهمية مؤقتًا للفالديشن
+    const placeholderImages = req.files?.map(() => ({
+      url: 'https://placeholder.com/image.png',
+      id: 'placeholder_id',
+    }));
+
+    // ✅ التحقق من الفالديشن
+    const { error } = productValidation({
+      title,
+      description,
+      descriptionAr,
+      category,
+      sizes: parsedSizes,
+      images: placeholderImages,
+    });
+
+    if (error) {
+      return res.status(400).json({ message: error.details.map(e => e.message).join(', ') });
+    }
+
+    // ✅ التأكد من وجود الكاتيجوري
     const checkCategory = await Category.findOne({ name: category });
     if (!checkCategory) {
       return res.status(404).json({ message: 'Category not found' });
     }
 
-    // تحويل sizes إلى JSON إذا كانت عبارة عن string
-    const parsedSizes = typeof sizes === 'string' ? JSON.parse(sizes) : sizes;
-
-    // دالة رفع الصور إلى Cloudinary
+    // ✅ دالة رفع الصور
     const streamUpload = (buffer) => {
       return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
@@ -31,7 +51,7 @@ module.exports.addProduct = asyncHandler(async (req, res) => {
       });
     };
 
-    // رفع الصور
+    // ✅ رفع الصور الفعلية
     const imageUploads = await Promise.all(
       req.files.map(async (file) => {
         const result = await streamUpload(file.buffer);
@@ -42,9 +62,9 @@ module.exports.addProduct = asyncHandler(async (req, res) => {
       })
     );
 
-    // إنشاء المنتج الجديد
+    // ✅ إنشاء المنتج
     const newProduct = new Product({
-      title, // استخدم العنوان المرسل من المستخدم
+      title,
       description,
       descriptionAr,
       category,
@@ -52,7 +72,6 @@ module.exports.addProduct = asyncHandler(async (req, res) => {
       images: imageUploads,
     });
 
-    // حفظ المنتج في قاعدة البيانات
     const save = await newProduct.save();
     res.status(201).json(save);
 
