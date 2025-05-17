@@ -12,6 +12,7 @@ const AddProduct = () => {
   const [description, setDescription] = useState('');
   const [descriptionAr, setDescriptionAr] = useState('');
   const [category, setCategory] = useState('');
+  const [loading, setLoading] = useState(false);
   const [sizes, setSizes] = useState([{ size: '', price: '' }]);
   const [images, setImages] = useState<File[]>([]);
 const [getCategory, setGetCategory] = useState<any>([])
@@ -49,6 +50,7 @@ useEffect(()=>{
     });
 
     try {
+      setLoading(true)
       const res = await axios.post(`${BaseUrl}/api/v1/product`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -56,9 +58,11 @@ useEffect(()=>{
         },
       });
       console.log('تمت الإضافة بنجاح:', res.data);
+      setLoading(false)
       alert('تمت الإضافة بنجاح!');
     } catch (err) {
       console.error('فشل الإضافة:', err);
+         setLoading(false)
       alert('حدث خطأ أثناء الإضافة.');
     }
   };
@@ -141,7 +145,8 @@ useEffect(()=>{
         onClick={handleSubmit}
         className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded"
       >
-      {Arabic?'حفظ المنتج':'Save Product'}
+        {loading?Arabic?'جار الاضافة  ... ':'Loading ...':Arabic?'اضافة المنتج':'Add Product'}
+     
       </button>
     </div>
   );

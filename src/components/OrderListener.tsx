@@ -7,7 +7,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const socket = io(`${BaseUrl}`);
+const token = Cookies.get('userToken');
+
+const socket = io(`${BaseUrl}`, {
+  auth: {
+    token,
+  },
+  transports: ['websocket'], // تأكد من هذا أيضًا
+});
 
 interface User {
   _id: string;

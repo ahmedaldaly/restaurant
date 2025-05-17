@@ -89,7 +89,7 @@ const [imageIndexes, setImageIndexes] = useState<{ [key: string]: number }>({});
 
   return (
     <div className="w-full min-h-screen p-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="flex justify-center flex-wrap gap-6">
         {product.map((item) => (
           <div
             key={item._id}

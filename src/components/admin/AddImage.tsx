@@ -83,7 +83,7 @@ const remove = (id:string)=>{
          />
    
          <button type="submit" className="bg-blue-500 cursor-pointer text-white py-2 px-4 rounded">
-           {loading?Arabic?'جاري التحميل':'Loading':Arabic?'اضافة الفئة':'Add Category'}
+           {loading?Arabic?'جاري التحميل':'Loading':Arabic?'اضافة الصوره':'Add Image'}
           
          </button>
        </form>
