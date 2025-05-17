@@ -2,7 +2,10 @@ const { User, validateLogin, validateRegister } = require('../module/User');
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+if (!process.env.SECRET_JWT ) {
+  console.error('تحقق من المتغيرات');
+  process.exit(1);
+}
 // تسجيل مستخدم جديد
 module.exports.Register = asyncHandler(async (req, res) => {
     const { error } = validateRegister(req.body);
