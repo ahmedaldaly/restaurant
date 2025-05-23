@@ -66,7 +66,7 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin:'https://restaurant-front-iota.vercel.app/',
+  origin:"https://restaurant-front-iota.vercel.app",
   credentials: true,
 }));
 
@@ -111,7 +111,7 @@ app.use((req, res, next) => {
 // ✅ Socket.io إعداد
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    origin: "https://restaurant-front-iota.vercel.app",
     methods: ['GET', 'POST'],
   }
 });
